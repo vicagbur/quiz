@@ -12,6 +12,7 @@ router.get('/', function(req, res) {
 
 //Autoload de comandos con :quizId
 router.param('quizId', quizController.load); //autoload :quizId
+router.param('commentId', commentController.load);
 
 //Definición de rutas de sesión
 router.get('/login',    sessionController.new);     //formulario de login
@@ -31,6 +32,9 @@ router.delete('/quizes/:quizId(\\d+)',      sessionController.loginRequired, qui
 //Definición de rutas de comentarios
 router.get('/quizes/:quizId(\\d+)/comments/new',  commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments',     commentController.create);
+//debería ser un put, porque acualtiza el comment
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',
+                                                  sessionController.loginRequired, commentController.publish);
 
 
 //router.get('/quizes/question', quizController.question);
