@@ -8,12 +8,33 @@ exports.loginRequired = function (req, res, next) {
   }
 }
 
+//MW de control de sesión
+exports.validSession = function (req, res, next) {
+  if (req.session.last_timestamp) {
+    //console.log("LAST_TS->"+req.session.last_timestamp);
+    //console.log("NEW_TS->"+req.session.new_timestamp);
+    var last_ts = new Date(req.session.last_timestamp);
+    var new_ts = new Date(req.session.new_timestamp);
+    //console.log("LAST_TS_DATE->"+last_ts);
+    //console.log("NEW_TS_DATE->"+new_ts);
+    var diff = new_ts.getTime() - last_ts.getTime();
+    //console.log("TS_DIFF->"+ diff);
+    //destroy the session if diff > 2 minutes
+    //if (diff > (2 * 60 * 1000)) {
+    if (diff > (2 * 60 * 1000)) {
+      delete req.session;
+    }
+  }
+  next();
+}
+
+
 //GET /login
 exports.new = function(req, res) {
   var errors = req.session.errors || {};
   req.session.errors = {};
 
-  res.render('sessions/new', {errors: errors});
+  res.render('/sessions/new', {errors: errors});
 };
 
 //POST /login

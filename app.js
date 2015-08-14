@@ -30,13 +30,15 @@ app.use(partials());
 
 // Helpers dinámicos
 app.use(function(req, res, next) {
-    // guardar path en sessoin.redir para después de login
+    // guardar path en session.redir para después de login
     if (!req.path.match(/\/login|\/logout/)) {
       req.session.redir = req.path;
     }
 
     // Hacer visible req.session en las vistas
     res.locals.session = req.session;
+    res.locals.session.last_timestamp = req.session.new_timestamp;
+    res.locals.session.new_timestamp = new Date().toUTCString();
     next();
 });
 

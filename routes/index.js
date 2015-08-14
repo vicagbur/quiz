@@ -20,28 +20,28 @@ router.post('/login',   sessionController.create);  //crear sesión
 router.get('/logout',   sessionController.destroy); //destruir sesión
 
 // Definición de rutas de /quizes
-router.get('/quizes',                       quizController.index);
-router.get('/quizes/:quizId(\\d+)',         quizController.show);
-router.get('/quizes/:quizId(\\d+)/answer',  quizController.answer);
-router.get('/quizes/new',                   sessionController.loginRequired, quizController.new);
-router.post('/quizes/create',               sessionController.loginRequired, quizController.create);
-router.get('/quizes/:quizId(\\d+)/edit',    sessionController.loginRequired, quizController.edit);
-router.put('/quizes/:quizId(\\d+)',         sessionController.loginRequired, quizController.update);
-router.delete('/quizes/:quizId(\\d+)',      sessionController.loginRequired, quizController.destroy);
+router.get('/quizes',                       sessionController.validSession, quizController.index);
+router.get('/quizes/:quizId(\\d+)',         sessionController.validSession, quizController.show);
+router.get('/quizes/:quizId(\\d+)/answer',  sessionController.validSession, quizController.answer);
+router.get('/quizes/new',                   sessionController.validSession, sessionController.loginRequired, quizController.new);
+router.post('/quizes/create',               sessionController.validSession, sessionController.loginRequired, quizController.create);
+router.get('/quizes/:quizId(\\d+)/edit',    sessionController.validSession, sessionController.loginRequired, quizController.edit);
+router.put('/quizes/:quizId(\\d+)',         sessionController.validSession, sessionController.loginRequired, quizController.update);
+router.delete('/quizes/:quizId(\\d+)',      sessionController.validSession, sessionController.loginRequired, quizController.destroy);
 
 //Definición de rutas de comentarios
-router.get('/quizes/:quizId(\\d+)/comments/new',  commentController.new);
-router.post('/quizes/:quizId(\\d+)/comments',     commentController.create);
+router.get('/quizes/:quizId(\\d+)/comments/new',  sessionController.validSession, commentController.new);
+router.post('/quizes/:quizId(\\d+)/comments',     sessionController.validSession, commentController.create);
 //debería ser un put, porque acualtiza el comment
 router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',
-                                                  sessionController.loginRequired, commentController.publish);
+                                                  sessionController.validSession, sessionController.loginRequired, commentController.publish);
 
 
 //router.get('/quizes/question', quizController.question);
 //router.get('/quizes/answer', quizController.answer);
 
 /* GET página de créditos. */
-router.get('/author', function(req, res) {
+router.get('/author', sessionController.validSession, function(req, res) {
   res.render('author', {errors:[]});
 });
 
