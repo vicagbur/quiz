@@ -15,14 +15,14 @@ exports.validSession = function (req, res, next) {
     //console.log("NEW_TS->"+req.session.new_timestamp);
     var last_ts = new Date(req.session.last_timestamp);
     var new_ts = new Date(req.session.new_timestamp);
-    //console.log("LAST_TS_DATE->"+last_ts);
-    //console.log("NEW_TS_DATE->"+new_ts);
+    console.log("LAST_TS_DATE->"+last_ts);
+    console.log("NEW_TS_DATE->"+new_ts);
     var diff = new_ts.getTime() - last_ts.getTime();
-    //console.log("TS_DIFF->"+ diff);
+    console.log("TS_DIFF->"+ diff +":"+ (diff > (2 * 60 * 1000)));
     //destroy the session if diff > 2 minutes
     //if (diff > (2 * 60 * 1000)) {
     if (diff > (2 * 60 * 1000)) {
-      delete req.session;
+      delete req.session.user;
     }
   }
   next();
@@ -34,7 +34,7 @@ exports.new = function(req, res) {
   var errors = req.session.errors || {};
   req.session.errors = {};
 
-  res.render('/sessions/new', {errors: errors});
+  res.render('sessions/new', {errors: errors});
 };
 
 //POST /login
